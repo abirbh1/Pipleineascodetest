@@ -18,7 +18,7 @@ pipeline {
           withCredentials([usernamePassword(credentialsId: 'docker_hub_repo', passwordVariables: 'PASS' , usernameVariable: 'USER')])
           sh 'docker build -t abibh1/demo-app:jma-1.0 .'
           sh "echo $PASS | docker login -u $USER --password-stdin"
-          sh ' docker push abibh1/demo-app:jma-1.0'
+          sh 'docker push abibh1/demo-app:jma-1.0'
         }
 
       }
@@ -33,5 +33,8 @@ pipeline {
   }
   tools {
     maven Maven
+  }
+  environment {
+    Maven = ''
   }
 }

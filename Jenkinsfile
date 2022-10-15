@@ -1,17 +1,31 @@
 pipeline {
   agent any
+  tools {
+    maven Maven
+  }
   stages {
-    stage('Build') {
+    stage('Build jar') {
       steps {
-        echo 'build is completed'
-        timeout(time: 5, unit: 'SECONDS') {
-    // some block
-           sh 'sleep 2'}
+        script{
+          echo"building the application...4"
+          sh 'mvn package'
+        }
       }
     }
-    stage('Test') {
+    stage('Build image') {
       steps {
-        echo 'test is completed'
+        script{
+          echo"building the image"
+          withCredentials([usernamePassword(credentialsId: 'doxker_hub_repo', passwordVariables: 'PASS' , usernameVariable: 'USER')])
+            sh 'docker build -t abibh1/demo-app:jma-1.0 .'
+            sh "echo $PASS | docker login -u $USER --password-stdin"
+            sh ' docker push abibh1/demo-app:jma-1.0'
+        }
+      }
+    }
+    stage('Deploy') {
+      steps {
+        echo 'Deploying the application'
       }
     }
 
